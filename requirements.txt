@@ -6,3 +6,5 @@ graphene-django==2.13.0
 psycopg2-binary==2.9.5
 django-cors-headers==3.5.0
 python-decouple
+coverage
+mixer
