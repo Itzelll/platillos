@@ -45,6 +45,6 @@ jobs:
     - name: show .env file
       run: cat .env
     - name: run tests
-      run: python manage.py test --settings=settings.local -v 3 --keepdb
+      run: python manage.py test --settings=settings.testing -v 3 --keepdb
     
     
