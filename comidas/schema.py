@@ -76,3 +76,6 @@ class CreateComida(graphene.Mutation):
 # 4
 class Mutation(graphene.ObjectType):
     create_comida = CreateComida.Field()
+
+
+schema = graphene.Schema(query=Query, mutation=Mutation)
