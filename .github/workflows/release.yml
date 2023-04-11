@@ -1,0 +1,50 @@
+name: release CI/CD
+
+# Controls when the action will run.
+on: 
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ release ]
+  pull_request:
+    branches: [ release ]
+    
+# A workflow run is made up of one or more jobs than can run sequentialy or in parallel.
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.8]
+        
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: show linux version
+      run: lsb_release -a
+    - name: list directory
+      run: ls -la
+    - name: show python version
+      run: python --version
+    - name: install dependencies
+      run: pip install -r requirements.txt
+    - name: make .env 
+      uses: SpicyPizza/create-envfile@v1.3
+      with:
+        envkey_TEST_SECRET_KEY : ${{ secrets.TEST_SECRET_KEY }}
+        envkey_TEST_DATABASE : ${{ secrets.TEST_DATABASE }}
+        envkey_TEST_USER : ${{ secrets.TEST_USER }}
+        envkey_TEST_PASSWORD : ${{ secrets.TEST_PASSWORD }}
+        envkey_TEST_HOST : ${{ secrets.TEST_HOST }}
+        envkey_TEST_PORT : ${{ secrets.TEST_PORT }}     
+        file_name: .env
+        fail_on_empty: false
+    - name: show .env file
+      run: cat .env
+    - name: run tests
+      run: python manage.py test --settings=settings.testing -v 3 --keepdb
+    
+    
