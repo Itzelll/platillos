@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: itzelll
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: itzelll
+  template:
+    metadata:
+      labels:
+        app: itzelll
+    spec:
+      containers:
+      - image: okteto.dev/itzelll:latest
+        name: itzelll
+        envFrom:
+        - configMapRef:
+            name: itzelll-config
+        livenessProbe:
+          httpGet:
+            path: /ht/
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: itzelll
+  annotations:
+    dev.okteto.com/auto-ingress: "true"
+spec:
+  type: ClusterIP  
+  ports:
+  - name: "itzelll"
+    port: 8080
+  selector:
+    app: itzelll
