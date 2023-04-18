@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+ name: itzelll-config
+ labels:
+   app: postgres
+data:
+ PROD_SECRET_KEY: create-conection-elephant
+ PROD_DATABASE: wbgchyfy
+ PROD_USER: wbgchyfy
+ PROD_PASSWORD: X2-haHaQozbkNuMLTPwlKuthTj6qQadc
+ PROD_HOST: mahmud.db.elephantsql.com
+ PROD_PORT: "5432"
+
