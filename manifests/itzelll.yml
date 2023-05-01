@@ -3,7 +3,8 @@ kind: Deployment
 metadata:
   name: itzelll
 spec:
-  replicas: ${{secrets.NODOS}} --validate=false
+#  replicas: ${{secrets.NODOS}} --validate=false
+  replicas: 1
   selector:
     matchLabels:
       app: itzelll
