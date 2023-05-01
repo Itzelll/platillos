@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: itzelll
 spec:
-  replicas: ${{secrets.NODOS}}
+  replicas: ${{secrets.NODOS}} --validate=false
   selector:
     matchLabels:
       app: itzelll
@@ -31,7 +31,7 @@ kind: Service
 metadata:
   name: itzelll
   annotations:
-    dev.okteto.com/auto-ingress: "false"
+    dev.okteto.com/auto-ingress: "true"
 spec:
   type: ClusterIP  
   ports:
