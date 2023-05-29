@@ -46,6 +46,21 @@ jobs:
       run: cat .env
     - name: run tests
       run: python manage.py test --settings=settings.testing -v 3 --keepdb
+      
+    - name: update DEV_SECRET_KEY
+      run: sed -i 's/{MY_DEV_SECRET_KEY}/${{secrets.DEV_SECRET_KEY}}/g' manifests/itzelll-configmap.yaml
+    - name: update DEV_DATABASE
+      run: sed -i 's/{MY_DEV_DATABASE}/${{secrets.DEV_SECRET_KEY}}/g' manifests/itzelll-configmap.yaml
+    - name: update DEV_USER
+      run: sed -i 's/{MY_DEV_USER}/${{secrets.DEV_SECRET_KEY}}/g' manifests/itzelll-configmap.yaml
+    - name: update DEV_PASSWORD
+      run: sed -i 's/{MY_DEV_PASSWORD}/${{secrets.DEV_SECRET_KEY}}/g' manifests/itzelll-configmap.yaml
+    - name: update DEV_HOST
+      run: sed -i 's/{MY_DEV_HOST}/${{secrets.DEV_SECRET_KEY}}/g' manifests/itzelll-configmap.yaml
+    - name: update DEV_PORT
+      run: sed -i 's/{MY_DEV_PORT}/${{secrets.DEV_SECRET_KEY}}/g' manifests/itzelll-configmap.yaml
+    
+    
     - uses: okteto/context@2.7.0
       with:
         token: ${{ secrets.OKTETO_TOKEN }}
