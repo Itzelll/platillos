@@ -8,7 +8,6 @@ from comidas.models import Comida, Vote
 class ComidaType(DjangoObjectType):
     class Meta:
         model = Comida
-        model = Vote
 
 
 # Add after the LinkType
