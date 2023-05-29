@@ -3,6 +3,8 @@ from graphene_django import DjangoObjectType
 from .models import Comida
 from users.schema import UserType
 from comidas.models import Comida, Vote
+from graphql import GraphQLError
+from django.db.models import Q
 
 
 class ComidaType(DjangoObjectType):
@@ -17,10 +19,15 @@ class VoteType(DjangoObjectType):
         
 
 class Query(graphene.ObjectType):
-    comidas = graphene.List(ComidaType)
+    comidas = graphene.List(ComidaType, search=graphene.String())
     votes = graphene.List(VoteType)
 
-    def resolve_comidas(self, info, **kwargs):
+    def resolve_comidas(self, info, search=None, **kwargs):
+        if search:
+            filter = (
+                Q(nombre__icontains=search) 
+                #| Q(description__icontains=search)
+        )
         return Comida.objects.all()
     
     def resolve_votes(self, info, **kwargs):
@@ -103,7 +110,7 @@ class CreateVote(graphene.Mutation):
     def mutate(self, info, platillo_id):
         user = info.context.user
         if user.is_anonymous:
-            raise Exception('You must be logged to vote!')
+            raise GraphQLError('You must be logged to vote!')
 
         platillo = Comida.objects.filter(id=platillo_id).first()
         if not platillo:
