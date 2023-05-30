@@ -48,19 +48,19 @@ jobs:
       run: python manage.py test --settings=settings.testing -v 3 --keepdb
       
     - name: update DEV_SECRET_KEY
-      run: sed -i 's/MY_DEV_SECRET_KEY/${{secrets.DEV_SECRET_KEY}}/g' manifests/itzelll-configmap.yaml
+      run: sed -i 's/{MY_DEV_SECRET_KEY}/${{secrets.DEV_SECRET_KEY}}/g' manifests/itzelll-configmap.yaml
     - name: update DEV_DATABASE
-      run: sed -i 's/MY_DEV_DATABASE/${{secrets.DEV_DATABASE}}/g' manifests/itzelll-configmap.yaml
+      run: sed -i 's/{MY_DEV_DATABASE}/${{secrets.DEV_DATABASE}}/g' manifests/itzelll-configmap.yaml
     - name: update DEV_USER
-      run: sed -i 's/MY_DEV_USER/${{secrets.DEV_USER}}/g' manifests/itzelll-configmap.yaml
+      run: sed -i 's/{MY_DEV_USER}/${{secrets.DEV_USER}}/g' manifests/itzelll-configmap.yaml
     - name: update DEV_PASSWORD
-      run: sed -i 's/MY_DEV_PASSWORD/${{secrets.DEV_PASSWORD}}/g' manifests/itzelll-configmap.yaml
+      run: sed -i 's/{MY_DEV_PASSWORD}/${{secrets.DEV_PASSWORD}}/g' manifests/itzelll-configmap.yaml
     - name: update DEV_HOST
-      run: sed -i 's/MY_DEV_HOST /${{secrets.DEV_HOST }}/g' manifests/itzelll-configmap.yaml
+      run: sed -i 's/{MY_DEV_HOST}/${{secrets.DEV_HOST }}/g' manifests/itzelll-configmap.yaml
     - name: update DEV_PORT
-      run: sed -i 's/MY_DEV_PORT /${{secrets.DEV_PORT }}/g' manifests/itzelll-configmap.yaml
+      run: sed -i 's/{MY_DEV_PORT}/${{secrets.DEV_PORT }}/g' manifests/itzelll-configmap.yaml
     - name: show config 
-      run: cat manifests/adsoftsito-configmap.yaml
+      run: cat manifests/itzelll-configmap.yaml
     
     - uses: okteto/context@2.7.0
       with:
