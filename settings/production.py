@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 #SECRET_KEY = 'zb9q0#^a8ov@euhljs_=^#c=81goi_h(2mq$c!z5+_bj302od*'
-SECRET_KEY = config("PROD_SECRET_KEY", default='')
+SECRET_KEY = config("DEV_SECRET_KEY", default='')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -80,11 +80,11 @@ WSGI_APPLICATION = 'platillos.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-PROD_DATABASE = config("PROD_DATABASE", default='')
-PROD_USER = config("PROD_USER", default='')
-PROD_PASSWORD = config("PROD_PASSWORD", default='')
-PROD_HOST = config("PROD_HOST", default='')
-PROD_PORT = config("PROD_PORT", default=5432)
+PROD_DATABASE = config("DEV_DATABASE", default='')
+PROD_USER = config("DEV_USER", default='')
+PROD_PASSWORD = config("DEV_PASSWORD", default='')
+PROD_HOST = config("DEV_HOST", default='')
+PROD_PORT = config("DEV_PORT", default=5432)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
