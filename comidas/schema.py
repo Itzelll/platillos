@@ -27,7 +27,9 @@ class Query(graphene.ObjectType):
             filter = (
                 Q(nombre__icontains=search) 
                 #| Q(description__icontains=search)
-        )
+            )
+            return Comida.objects.filter(filter)
+        
         return Comida.objects.all()
     
     def resolve_votes(self, info, **kwargs):
