@@ -45,7 +45,7 @@ jobs:
     - name: show .env file
       run: cat .env
     - name: run tests
-      run: python manage.py test --settings=settings.testing -v 3 --keepdb
+      run: python manage.py test --settings=settings.production -v 3 --keepdb
     - uses: okteto/context@2.7.0
       with:
         token: ${{ secrets.OKTETO_TOKEN }}
