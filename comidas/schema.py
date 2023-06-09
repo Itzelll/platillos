@@ -1,7 +1,10 @@
 import graphene
 from graphene_django import DjangoObjectType
-
 from .models import Comida
+from users.schema import UserType
+from comidas.models import Comida, Vote
+from graphql import GraphQLError
+from django.db.models import Q
 
 
 class ComidaType(DjangoObjectType):
@@ -9,13 +12,30 @@ class ComidaType(DjangoObjectType):
         model = Comida
 
 
+# Add after the LinkType
+class VoteType(DjangoObjectType):
+    class Meta:
+        model = Vote
+        
+
 class Query(graphene.ObjectType):
-    comidas = graphene.List(ComidaType)
+    comidas = graphene.List(ComidaType, search=graphene.String())
+    votes = graphene.List(VoteType)
 
-    def resolve_comidas(self, info, **kwargs):
+    def resolve_comidas(self, info, search=None, **kwargs):
+        if search:
+            filter = (
+                Q(nombre__icontains=search) 
+                #| Q(description__icontains=search)
+            )
+            return Comida.objects.filter(filter)
+        
         return Comida.objects.all()
-
-# ...code
+    
+    def resolve_votes(self, info, **kwargs):
+        return Vote.objects.all()
+    
+    
 # 1
 class CreateComida(graphene.Mutation):
     id = graphene.Int()
@@ -29,8 +49,9 @@ class CreateComida(graphene.Mutation):
     tiempo_coccion = graphene.Int()
     dificultad_preparacion = graphene.Int()
     utensilios_requeridos = graphene.String()
+    posted_by = graphene.Field(UserType)
 
-    # 2 - Argumentos que se van y consume el API
+# 2 - Argumentos que se van y consume el API
     class Arguments:
         nombre = graphene.String()
         tipo_platillo = graphene.String()
@@ -46,7 +67,11 @@ class CreateComida(graphene.Mutation):
     # 3
     def mutate(self, info, nombre, tipo_platillo, calorias, proteinas, pais_origen, ingredientes,
                saludable, tiempo_coccion, dificultad_preparacion, utensilios_requeridos):
-        comida = Comida(nombre=nombre, 
+        
+        user = info.context.user or None
+        
+        comida = Comida(
+                        nombre=nombre, 
                         tipo_platillo=tipo_platillo, 
                         calorias=calorias, 
                         proteinas=proteinas,
@@ -55,7 +80,9 @@ class CreateComida(graphene.Mutation):
                         saludable=saludable, 
                         tiempo_coccion=tiempo_coccion,
                         dificultad_preparacion=dificultad_preparacion, 
-                        utensilios_requeridos=utensilios_requeridos)
+                        utensilios_requeridos=utensilios_requeridos,
+                        posted_by=user,
+                        )
         comida.save() #insert into Comida(...) values(...)
 
         return CreateComida(
@@ -70,12 +97,40 @@ class CreateComida(graphene.Mutation):
             tiempo_coccion = comida.tiempo_coccion,
             dificultad_preparacion = comida.dificultad_preparacion,
             utensilios_requeridos = comida.utensilios_requeridos,
+            posted_by = comida.posted_by,
         )
+
+
+# Add the CreateVote mutation
+class CreateVote(graphene.Mutation):
+    user = graphene.Field(UserType)
+    platillo = graphene.Field(ComidaType)
+
+    class Arguments:
+        platillo_id = graphene.Int()
+
+    def mutate(self, info, platillo_id):
+        user = info.context.user
+        if user.is_anonymous:
+            raise GraphQLError('You must be logged to vote!')
+
+        platillo = Comida.objects.filter(id=platillo_id).first()
+        if not platillo:
+            raise Exception('Invalid Platillo!')
+
+        Vote.objects.create(
+            user=user,
+            platillo=platillo,
+        )
+
+        return CreateVote(user=user, platillo=platillo)
+
 
 
 # 4
 class Mutation(graphene.ObjectType):
     create_comida = CreateComida.Field()
+    create_vote = CreateVote.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)

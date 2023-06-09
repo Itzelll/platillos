@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 # Create your models here.
 class Comida(models.Model):
@@ -12,3 +13,10 @@ class Comida(models.Model):
     tiempo_coccion = models.IntegerField(default=0, blank=False)
     dificultad_preparacion = models.PositiveSmallIntegerField(default=1, blank=False)
     utensilios_requeridos = models.TextField(default='', blank=False)
+    
+    posted_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
+
+
+class Vote(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    platillo = models.ForeignKey('comidas.Comida', related_name='platillos', on_delete=models.CASCADE)
