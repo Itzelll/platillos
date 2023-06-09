@@ -93,7 +93,7 @@ DATABASES = {
         'USER': PROD_USER,
         'PASSWORD': PROD_PASSWORD,
         'HOST': PROD_HOST,
-        'PORT': PROD_PORT,
+        'PORT': 5432,
         #'TEST': {
         #    'NAME': TEST_DATABASE,
         #},
