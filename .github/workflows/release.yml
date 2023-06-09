@@ -45,7 +45,7 @@ jobs:
     - name: show .env file
       run: cat .env
     - name: run tests
-      run: python manage.py test --settings=settings.production -v 3 --keepdb
+      run: python manage.py test --settings=settings.testing -v 3 --keepdb
       
     - name: update DEV_SECRET_KEY
       run: sed -i 's/MY_DEV_SECRET_KEY/${{secrets.DEV_SECRET_KEY}}/g' manifests/itzelll-configmap.yaml
