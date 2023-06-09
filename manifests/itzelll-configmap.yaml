@@ -11,7 +11,7 @@ data:
  PROD_PASSWORD: X2-haHaQozbkNuMLTPwlKuthTj6qQadc
  PROD_HOST: mahmud.db.elephantsql.com
  PROD_PORT: "5432"
- PROD_OPENAI: "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"
+ PROD_OPENAI: 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
  DEV_SECRET_KEY: create-conection-elephant
  DEV_DATABASE: wbgchyfy
  DEV_USER: wbgchyfy
